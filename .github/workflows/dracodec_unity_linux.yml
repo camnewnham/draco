@@ -1,15 +1,22 @@
-name: Draco Decoder Unity library Linux CI
+name: Draco Decoder Unity library CI
 
-on:
-  push:
-    branches:
-    - master
+on: [push]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-    
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest,macOS-latest,ubuntu-latest]
+        include:
+        - os: windows-latest
+          filename: libdracodec_unity.dll
+        - os: macOS-latest
+          filename: dracodec_unity.bundle
+        - os: ubuntu-latest
+          filename: libdracodec_unity.so
+
     steps:
     - uses: actions/checkout@v1
     - name: configure
@@ -18,5 +25,5 @@ jobs:
       run: cmake --build build --target dracodec_unity
     - uses: actions/upload-artifact@master
       with:
-        name: libdracodec_unity.so
-        path: build/libdracodec_unity.so
+        name: ${{ matrix.filename }}
+        path: build/${{ matrix.filename }}
