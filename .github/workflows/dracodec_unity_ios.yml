@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: configure
-      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: make
       run: cmake --build build --target dracodec_unity
     - uses: actions/upload-artifact@master
