@@ -1,0 +1,22 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches:
+    - unity_on_steroids
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: configure
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON
+    - name: make
+      run: cmake --build build --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: libdracodec_unity.so
+        path: build/libdracodec_unity.so
