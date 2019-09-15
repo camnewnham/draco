@@ -34,7 +34,7 @@ jobs:
 
     - name: configure_win32
       if: matrix.os == 'windows-latest'
-      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x86 -DBUILD_UNITY_PLUGIN=ON
+      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=Win32 -DBUILD_UNITY_PLUGIN=ON
     - name: make_win32
       if: matrix.os == 'windows-latest'
       run: cmake --build build32 --target dracodec_unity
