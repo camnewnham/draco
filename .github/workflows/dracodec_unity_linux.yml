@@ -44,17 +44,17 @@ jobs:
         name: ${{ matrix.filename }}_32
         path: build32/${{ matrix.filepath }}
 
-    - name: configure_linux32
-      if: matrix.os == 'ubuntu-latest'
-      env:
-        CC: /usr/bin/clang
-        CXX: /usr/bin/clang++
-      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON
-    - name: make_linux32
-      if: matrix.os == 'ubuntu-latest'
-      run: cmake --build build32 --target dracodec_unity
-    - uses: actions/upload-artifact@master
-      if: matrix.os == 'ubuntu-latest'
-      with:
-        name: ${{ matrix.filename }}_32
-        path: build32/${{ matrix.filepath }}
+    # - name: configure_linux32
+    #   if: matrix.os == 'ubuntu-latest'
+    #   env:
+    #     CC: /usr/bin/clang
+    #     CXX: /usr/bin/clang++
+    #   run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON
+    # - name: make_linux32
+    #   if: matrix.os == 'ubuntu-latest'
+    #   run: cmake --build build32 --target dracodec_unity
+    # - uses: actions/upload-artifact@master
+    #   if: matrix.os == 'ubuntu-latest'
+    #   with:
+    #     name: ${{ matrix.filename }}_32
+    #     path: build32/${{ matrix.filepath }}
