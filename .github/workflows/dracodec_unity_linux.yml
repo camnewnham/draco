@@ -11,13 +11,13 @@ jobs:
         os: [windows-latest,macOS-latest,ubuntu-latest]
         include:
         - os: windows-latest
-          filename: dracodec_unity.dll
+          filename: dracodec_unity_Windows
           filepath: Debug/dracodec_unity.dll
         - os: macOS-latest
-          filename: dracodec_unity.bundle
+          filename: dracodec_unity_macOS
           filepath: dracodec_unity.bundle
         - os: ubuntu-latest
-          filename: libdracodec_unity.so
+          filename: libdracodec_unity_Linux
           filepath: libdracodec_unity.so
 
     steps:
