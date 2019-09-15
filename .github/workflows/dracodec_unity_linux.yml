@@ -3,7 +3,7 @@ name: Draco Decoder Unity library Linux CI
 on:
   push:
     branches:
-    - unity_on_steroids
+    - master
 
 jobs:
   build:
