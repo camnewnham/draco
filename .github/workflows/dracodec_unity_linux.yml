@@ -17,7 +17,7 @@ jobs:
           filename: dracodec_unity_macOS
           filepath: dracodec_unity.bundle
         - os: ubuntu-latest
-          filename: libdracodec_unity_Linux
+          filename: dracodec_unity_Linux
           filepath: libdracodec_unity.so
 
     steps:
