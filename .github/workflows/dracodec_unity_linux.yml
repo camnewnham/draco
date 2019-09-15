@@ -11,11 +11,14 @@ jobs:
         os: [windows-latest,macOS-latest,ubuntu-latest]
         include:
         - os: windows-latest
-          filename: libdracodec_unity.dll
+          filename: dracodec_unity.dll
+          filepath: Debug/dracodec_unity.dll
         - os: macOS-latest
           filename: dracodec_unity.bundle
+          filepath: dracodec_unity.bundle
         - os: ubuntu-latest
           filename: libdracodec_unity.so
+          filepath: libdracodec_unity.so
 
     steps:
     - uses: actions/checkout@v1
@@ -26,4 +29,4 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: ${{ matrix.filename }}
-        path: build/${{ matrix.filename }}
+        path: build/${{ matrix.filepath }}
