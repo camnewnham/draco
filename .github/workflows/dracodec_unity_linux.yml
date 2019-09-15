@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Draco Decoder Unity library Linux CI
 
 on:
   push:
