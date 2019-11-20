@@ -93,7 +93,9 @@ jobs:
         path: build/libdracodec_unity.so
 
     - name: install_i386_env
-      run: sudo apt install build-essential gcc-multilib g++-multilib
+      run: |
+        sudo apt-get update
+        sudo apt install build-essential gcc-multilib g++-multilib
     - name: configure_linux32
       run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux32
