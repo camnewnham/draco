@@ -62,6 +62,15 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: install_cmake
+      run: |
+        sudo apt-get update
+        sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget
+        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+        sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+        sudo apt-get update
+        sudo apt-get install cmake
+
     - name: install_android_ndk
       run: if [ ! -f android-ndk-r20-linux-x86_64.zip ]; then echo "Installing Android NDK"; wget https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip; unzip android-ndk-r20-linux-x86_64.zip; echo "Installed Android NDK"; else echo "Android NDK already installed"; fi
 
