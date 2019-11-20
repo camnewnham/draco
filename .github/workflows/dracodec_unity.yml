@@ -62,6 +62,36 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: install_cmake
+      run: |
+        sudo apt update
+        sudo apt install apt-transport-https ca-certificates gnupg software-properties-common wget
+        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+        sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+        sudo apt update
+        sudo apt install cmake
+
+    - name: install_android_ndk
+      run: if [ ! -f android-ndk-r20-linux-x86_64.zip ]; then echo "Installing Android NDK"; wget https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip; unzip android-ndk-r20-linux-x86_64.zip; echo "Installed Android NDK"; else echo "Android NDK already installed"; fi
+
+    - name: configure_android_arm64-v8a
+      run: /usr/bin/cmake -Bbuild_android_arm64-v8a -DANDROID_ABI=arm64-v8a -DCMAKE_BUILD_TYPE=Release -DANDROID_NDK=android-ndk-r20 -DCMAKE_TOOLCHAIN_FILE="android-ndk-r20/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_android_arm64-v8a
+      run: /usr/bin/cmake --build build_android_arm64-v8a --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_android_arm64-v8a
+        path: build_android_arm64-v8a/libdracodec_unity.so
+
+    - name: configure_android_armeabi-v7a
+      run: /usr/bin/cmake -Bbuild_android_armeabi-v7a -DANDROID_ABI=armeabi-v7a -DCMAKE_BUILD_TYPE=Release -DANDROID_NDK=android-ndk-r20 -DCMAKE_TOOLCHAIN_FILE="android-ndk-r20/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_android_armeabi-v7a
+      run: /usr/bin/cmake --build build_android_armeabi-v7a --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_android_armeabi-v7a
+        path: build_android_armeabi-v7a/libdracodec_unity.so
+
     - name: configure_linux64
       run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux64
@@ -72,7 +102,9 @@ jobs:
         path: build/libdracodec_unity.so
 
     - name: install_i386_env
-      run: sudo apt install build-essential gcc-multilib g++-multilib
+      run: |
+        sudo apt update
+        sudo apt install build-essential gcc-multilib g++-multilib
     - name: configure_linux32
       run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux32
