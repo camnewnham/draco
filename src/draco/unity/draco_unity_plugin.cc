@@ -76,10 +76,15 @@ int DecodeMeshForUnity(char *data, unsigned int length,
   unity_mesh->num_vertices = in_mesh->num_points();
 
   unity_mesh->indices = new int[in_mesh->num_faces() * 3];
+  int tmp;
   for (draco::FaceIndex face_id(0); face_id < in_mesh->num_faces(); ++face_id) {
     const Mesh::Face &face = in_mesh->face(draco::FaceIndex(face_id));
-    memcpy(unity_mesh->indices + face_id.value() * 3,
-           reinterpret_cast<const int *>(face.data()), sizeof(int) * 3);
+    int* dest = unity_mesh->indices + face_id.value() * 3;
+    memcpy(dest,reinterpret_cast<const int *>(face.data()), sizeof(int) * 3);
+    // right-hand to left-handed coordinate system switch: change triangle order
+    tmp = *(dest+1);
+    *(dest+1) = *(dest+2);
+    *(dest+2) = tmp;
   }
 
   // TODO(draco-eng): Add other attributes.
@@ -88,11 +93,14 @@ int DecodeMeshForUnity(char *data, unsigned int length,
       in_mesh->GetNamedAttribute(draco::GeometryAttribute::POSITION);
   for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
     const draco::AttributeValueIndex val_index = pos_att->mapped_index(i);
-    if (!pos_att->ConvertValue<float, 3>(
-            val_index, unity_mesh->position + i.value() * 3)) {
+    float* dest = unity_mesh->position + i.value() * 3;
+    if (!pos_att->ConvertValue<float>(
+            val_index, 3, dest)) {
       ReleaseUnityMesh(&unity_mesh);
       return -8;
     }
+    // right-hand to left-handed coordinate system switch: flip Z axis
+    *(dest+2) *= -1;
   }
   // Get normal attributes.
   const auto normal_att =
@@ -101,12 +109,15 @@ int DecodeMeshForUnity(char *data, unsigned int length,
     unity_mesh->normal = new float[in_mesh->num_points() * 3];
     unity_mesh->has_normal = true;
     for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
+      float* dest = unity_mesh->normal + i.value() * 3;
       const draco::AttributeValueIndex val_index = normal_att->mapped_index(i);
       if (!normal_att->ConvertValue<float, 3>(
-              val_index, unity_mesh->normal + i.value() * 3)) {
+              val_index, dest)) {
         ReleaseUnityMesh(&unity_mesh);
         return -8;
       }
+      // right-hand to left-handed coordinate system switch: flip Z axis
+      *(dest+2) *= -1;
     }
   }
   // Get color attributes.
