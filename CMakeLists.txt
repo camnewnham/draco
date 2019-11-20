@@ -1044,6 +1044,9 @@ else()
     # For Mac, we need to build a .bundle for plugin.
     if(APPLE)
       set_target_properties(dracodec_unity PROPERTIES BUNDLE true)
+    else()
+      # enable stripping
+      append_link_flag_to_target(dracodec_unity "-s")
     endif()
     if(IOS)
       # Workaround to ensure bitcode is generated when
