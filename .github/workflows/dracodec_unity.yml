@@ -1,0 +1,83 @@
+name: Draco Decoder Unity library CI
+
+on: [push]
+
+jobs:
+
+  mac:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: configure_mac
+      run: cmake . -Bbuild_mac -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_mac
+      run: cmake --build build_mac --config Release --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_macOS
+        path: build_mac/dracodec_unity.bundle
+
+    - name: configure_ios
+      run: cmake . -Bbuild_ios -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_ios
+      run: cmake --build build_ios --config Release --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_iOS
+        path: build_ios/libdracodec_unity.a
+
+
+  windows:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: configure_win64
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_win64
+      run: cmake --build build --config Release --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_Windows_64
+        path: build/Release/dracodec_unity.dll
+
+    - name: configure_win32
+      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=Win32 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_win32
+      run: cmake --build build32 --config Release --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_Windows_32
+        path: build32/Release/dracodec_unity.dll
+
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: configure_linux64
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_linux64
+      run: cmake --build build --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_Linux_64
+        path: build/libdracodec_unity.so
+
+    - name: install_i386_env
+      run: sudo apt install build-essential gcc-multilib g++-multilib
+    - name: configure_linux32
+      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_linux32
+      run: cmake --build build32 --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_Linux_32
+        path: build32/libdracodec_unity.so
