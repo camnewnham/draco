@@ -15,10 +15,14 @@ jobs:
       run: cmake . -Bbuild_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_mac
       run: cmake --build build_mac --config MinSizeRel --target dracodec_unity
+    - name: package_mac
+      run: |
+        mkdir build_mac/dracodec_unity
+        mv build_mac/dracodec_unity.bundle build_mac/dracodec_unity
     - uses: actions/upload-artifact@master
       with:
         name: dracodec_unity_macOS
-        path: build_mac/dracodec_unity.bundle
+        path: build_mac/dracodec_unity
 
     - name: configure_ios
       run: cmake . -Bbuild_ios -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
