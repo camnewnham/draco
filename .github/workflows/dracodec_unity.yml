@@ -42,22 +42,22 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: configure_win64
-      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_win64
-      run: cmake --build build --config MinSizeRel --target dracodec_unity
+      run: cmake --build build --config Release --target dracodec_unity
     - uses: actions/upload-artifact@master
       with:
         name: dracodec_unity_Windows_64
-        path: build/MinSizeRel/dracodec_unity.dll
+        path: build/Release/dracodec_unity.dll
 
     - name: configure_win32
-      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_GENERATOR_PLATFORM=Win32 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      run: cmake . -Bbuild32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=Win32 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_win32
-      run: cmake --build build32 --config MinSizeRel --target dracodec_unity
+      run: cmake --build build32 --config Release --target dracodec_unity
     - uses: actions/upload-artifact@master
       with:
         name: dracodec_unity_Windows_32
-        path: build32/MinSizeRel/dracodec_unity.dll
+        path: build32/Release/dracodec_unity.dll
 
   linux:
 
