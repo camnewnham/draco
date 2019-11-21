@@ -92,6 +92,15 @@ jobs:
         name: dracodec_unity_android_armeabi-v7a
         path: build_android_armeabi-v7a/libdracodec_unity.so
 
+    - name: configure_android_x86
+      run: /usr/bin/cmake -Bbuild_android_x86 -DANDROID_ABI=x86 -DCMAKE_BUILD_TYPE=MinSizeRel -DANDROID_NDK=android-ndk-r20 -DCMAKE_TOOLCHAIN_FILE="android-ndk-r20/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+    - name: build_android_x86
+      run: /usr/bin/cmake --build build_android_x86 --target dracodec_unity
+    - uses: actions/upload-artifact@master
+      with:
+        name: dracodec_unity_android_x86
+        path: build_android_x86/libdracodec_unity.so
+
     - name: configure_linux64
       run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux64
