@@ -149,11 +149,14 @@ int DecodeMeshForUnity(char *data, unsigned int length,
     for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
       const draco::AttributeValueIndex val_index =
           texcoord_att->mapped_index(i);
+      float* dest = unity_mesh->texcoord + i.value() * 2;
       if (!texcoord_att->ConvertValue<float, 2>(
-              val_index, unity_mesh->texcoord + i.value() * 2)) {
+              val_index, dest)) {
         ReleaseUnityMesh(&unity_mesh);
         return -8;
       }
+      // right-handed top left to left-handed lower left conversion
+      *(dest+1) = 1-*(dest+1);
     }
   }
 
