@@ -45,12 +45,25 @@ void ReleaseUnityMesh(DracoToUnityMesh **mesh_ptr) {
     mesh->has_color = false;
     mesh->color = nullptr;
   }
+  if (mesh->has_weights && mesh->weights) {
+    delete[] mesh->weights;
+    mesh->has_weights = false;
+    mesh->weights = nullptr;
+  }
+  if (mesh->has_joints && mesh->joints) {
+    delete[] mesh->joints;
+    mesh->has_joints = false;
+    mesh->joints = nullptr;
+  }
   delete mesh;
   *mesh_ptr = nullptr;
 }
 
 int DecodeMeshForUnity(char *data, unsigned int length,
-                       DracoToUnityMesh **tmp_mesh) {
+                       DracoToUnityMesh **tmp_mesh,
+                       int32_t weightsId,
+                       int32_t jointsId
+                       ) {
   draco::DecoderBuffer buffer;
   buffer.Init(data, length);
   auto type_statusor = draco::Decoder::GetEncodedGeometryType(&buffer);
@@ -157,6 +170,46 @@ int DecodeMeshForUnity(char *data, unsigned int length,
       }
       // right-handed top left to left-handed lower left conversion
       *(dest+1) = 1-*(dest+1);
+    }
+  }
+
+  if(weightsId>=0) {
+    // Get skin bone weights attributes.
+    const auto weights_att =
+        in_mesh->GetAttributeByUniqueId(weightsId);
+    if (weights_att != nullptr && weights_att->num_components()==4 ) {
+      unity_mesh->weights = new float[in_mesh->num_points() * 4];
+      unity_mesh->has_weights = true;
+      for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
+        const draco::AttributeValueIndex val_index =
+            weights_att->mapped_index(i);
+        float* dest = unity_mesh->weights + i.value() * 4;
+        if (!weights_att->ConvertValue<float, 4>(
+                val_index, dest)) {
+          ReleaseUnityMesh(&unity_mesh);
+          return -8;
+        }
+      }
+    }
+  }
+
+  if(jointsId>=0) {
+    // Get skin joints (bone ID) attributes.
+    const auto joints_att =
+        in_mesh->GetAttributeByUniqueId(jointsId);
+    if (joints_att != nullptr && joints_att->num_components()==4) {
+      unity_mesh->joints = new int[in_mesh->num_points() * 4];
+      unity_mesh->has_joints = true;
+      for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
+        const draco::AttributeValueIndex val_index =
+            joints_att->mapped_index(i);
+        int* dest = unity_mesh->joints + i.value() * 4;
+        if (!joints_att->ConvertValue<int, 4>(
+                val_index, dest)) {
+          ReleaseUnityMesh(&unity_mesh);
+          return -8;
+        }
+      }
     }
   }
 

@@ -54,6 +54,10 @@ struct EXPORT_API DracoToUnityMesh {
   float *texcoord;
   bool has_color;
   float *color;
+  bool has_weights;
+  float *weights;
+  bool has_joints;
+  int *joints;
 };
 
 void EXPORT_API ReleaseUnityMesh(DracoToUnityMesh **mesh_ptr);
@@ -62,7 +66,10 @@ void EXPORT_API ReleaseUnityMesh(DracoToUnityMesh **mesh_ptr);
  * define and pass a null pointer. Otherwise there will be memory leak.
  */
 int EXPORT_API DecodeMeshForUnity(char *data, unsigned int length,
-                                  DracoToUnityMesh **tmp_mesh);
+                                  DracoToUnityMesh **tmp_mesh,
+                                  int32_t weightsId = -1,
+                                  int32_t jointsId = -1
+                                  );
 }  // extern "C"
 
 }  // namespace draco
