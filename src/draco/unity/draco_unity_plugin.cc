@@ -89,11 +89,11 @@ int DecodeMeshForUnity(char *data, unsigned int length,
   unity_mesh->num_vertices = in_mesh->num_points();
 
   unity_mesh->indices = new int[in_mesh->num_faces() * 3];
-  int tmp;
+  int32_t tmp;
   for (draco::FaceIndex face_id(0); face_id < in_mesh->num_faces(); ++face_id) {
     const Mesh::Face &face = in_mesh->face(draco::FaceIndex(face_id));
-    int* dest = unity_mesh->indices + face_id.value() * 3;
-    memcpy(dest,reinterpret_cast<const int *>(face.data()), sizeof(int) * 3);
+    int32_t* dest = unity_mesh->indices + face_id.value() * 3;
+    memcpy(dest,reinterpret_cast<const int32_t *>(face.data()), sizeof(int32_t) * 3);
     // right-hand to left-handed coordinate system switch: change triangle order
     tmp = *(dest+1);
     *(dest+1) = *(dest+2);
@@ -198,13 +198,13 @@ int DecodeMeshForUnity(char *data, unsigned int length,
     const auto joints_att =
         in_mesh->GetAttributeByUniqueId(jointsId);
     if (joints_att != nullptr && joints_att->num_components()==4) {
-      unity_mesh->joints = new int[in_mesh->num_points() * 4];
+      unity_mesh->joints = new int32_t[in_mesh->num_points() * 4];
       unity_mesh->has_joints = true;
       for (draco::PointIndex i(0); i < in_mesh->num_points(); ++i) {
         const draco::AttributeValueIndex val_index =
             joints_att->mapped_index(i);
-        int* dest = unity_mesh->joints + i.value() * 4;
-        if (!joints_att->ConvertValue<int, 4>(
+        int32_t* dest = unity_mesh->joints + i.value() * 4;
+        if (!joints_att->ConvertValue<int32_t, 4>(
                 val_index, dest)) {
           ReleaseUnityMesh(&unity_mesh);
           return -8;

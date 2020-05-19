@@ -48,9 +48,9 @@ struct EXPORT_API DracoToUnityMesh {
         has_joints(false),
         joints(nullptr) {}
 
-  int num_faces;
-  int *indices;
-  int num_vertices;
+  int32_t num_faces;
+  int32_t *indices;
+  int32_t num_vertices;
   float *position;
   bool has_normal;
   float *normal;
@@ -61,7 +61,7 @@ struct EXPORT_API DracoToUnityMesh {
   bool has_weights;
   float *weights;
   bool has_joints;
-  int *joints;
+  int32_t *joints;
 };
 
 void EXPORT_API ReleaseUnityMesh(DracoToUnityMesh **mesh_ptr);
