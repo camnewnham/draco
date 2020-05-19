@@ -42,7 +42,11 @@ struct EXPORT_API DracoToUnityMesh {
         has_texcoord(false),
         texcoord(nullptr),
         has_color(false),
-        color(nullptr) {}
+        color(nullptr),
+        has_weights(false),
+        weights(nullptr),
+        has_joints(false),
+        joints(nullptr) {}
 
   int num_faces;
   int *indices;
