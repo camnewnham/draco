@@ -22,25 +22,28 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '12.2'
+
     - name: configure_mac
-      run: cmake . -Bbuild_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
-      ## This option is for Apple silicon, but does not work atm
-      # -DCMAKE_OSX_ARCHITECTURES="\$(ARCHS_STANDARD)"
+      # ARCHS_STANDARD explicitely enables Apple silicon on Xcode 12.2
+      run: cmake . -G Xcode -B build_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_OSX_ARCHITECTURES="\$(ARCHS_STANDARD)" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_mac
-      run: cmake --build build_mac --config MinSizeRel --target dracodec_unity -j
+      run: cmake --build build_mac --config MinSizeRel --target dracodec_unity
 
     - name: configure_ios
-      run: cmake . -Bbuild_ios -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      run: cmake . -G Xcode -B build_ios -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_ios
-      run: cmake --build build_ios --config MinSizeRel --target dracodec_unity -j
+      run: cmake --build build_ios --config MinSizeRel --target dracodec_unity
 
     - name: package Apple
       run: |
         mkdir draco_apple
         mkdir draco_apple/x86_64
-        mv build_mac/dracodec_unity.bundle draco_apple/x86_64
+        mv build_mac/MinSizeRel/dracodec_unity.bundle draco_apple/x86_64
         mkdir draco_apple/iOS
-        mv build_ios/libdracodec_unity.a draco_apple/iOS
+        mv build_ios/MinSizeRel-iphoneos/libdracodec_unity.a draco_apple/iOS
     - name: upload artifact
       uses: actions/upload-artifact@v2
       with:
