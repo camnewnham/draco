@@ -24,6 +24,8 @@ jobs:
 
     - name: configure_mac
       run: cmake . -Bbuild_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      ## This option is for Apple silicon, but does not work atm
+      # -DCMAKE_OSX_ARCHITECTURES="\$(ARCHS_STANDARD)"
     - name: build_mac
       run: cmake --build build_mac --config MinSizeRel --target dracodec_unity
 
