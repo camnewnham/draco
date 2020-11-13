@@ -27,12 +27,12 @@ jobs:
       ## This option is for Apple silicon, but does not work atm
       # -DCMAKE_OSX_ARCHITECTURES="\$(ARCHS_STANDARD)"
     - name: build_mac
-      run: cmake --build build_mac --config MinSizeRel --target dracodec_unity
+      run: cmake --build build_mac --config MinSizeRel --target dracodec_unity -j
 
     - name: configure_ios
       run: cmake . -Bbuild_ios -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=armv7\;armv7s\;arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_ios
-      run: cmake --build build_ios --config MinSizeRel --target dracodec_unity
+      run: cmake --build build_ios --config MinSizeRel --target dracodec_unity -j
 
     - name: package Apple
       run: |
@@ -121,23 +121,23 @@ jobs:
     - name: configure_android_arm64-v8a
       run: cmake -Bbuild_android_arm64-v8a -DANDROID_ABI=arm64-v8a -DCMAKE_BUILD_TYPE=MinSizeRel -DANDROID_NDK=android-ndk-r21d -DCMAKE_TOOLCHAIN_FILE="android-ndk-r21d/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_android_arm64-v8a
-      run: cmake --build build_android_arm64-v8a --target dracodec_unity
+      run: cmake --build build_android_arm64-v8a --target dracodec_unity -j
 
     - name: configure_android_armeabi-v7a
       run: cmake -Bbuild_android_armeabi-v7a -DANDROID_ABI=armeabi-v7a -DCMAKE_BUILD_TYPE=MinSizeRel -DANDROID_NDK=android-ndk-r21d -DCMAKE_TOOLCHAIN_FILE="android-ndk-r21d/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_android_armeabi-v7a
-      run: cmake --build build_android_armeabi-v7a --target dracodec_unity
+      run: cmake --build build_android_armeabi-v7a --target dracodec_unity -j
 
     - name: configure_android_x86
       run: cmake -Bbuild_android_x86 -DANDROID_ABI=x86 -DCMAKE_BUILD_TYPE=MinSizeRel -DANDROID_NDK=android-ndk-r21d -DCMAKE_TOOLCHAIN_FILE="android-ndk-r21d/build/cmake/android.toolchain.cmake" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_android_x86
-      run: cmake --build build_android_x86 --target dracodec_unity
+      run: cmake --build build_android_x86 --target dracodec_unity -j
 
     # Linux 64
     - name: configure_linux64
       run: cmake . -G Ninja -Bbuild_linux_64 -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux64
-      run: cmake --build build_linux_64 --target dracodec_unity
+      run: cmake --build build_linux_64 --target dracodec_unity -j
 
     # Linux 32
     - name: install_i386_env
@@ -145,7 +145,7 @@ jobs:
     - name: configure_linux32
       run: cmake . -G Ninja -Bbuild_linux_32 -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/linux_i686.toolchain.cmake -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_linux32
-      run: cmake --build build_linux_32 --target dracodec_unity
+      run: cmake --build build_linux_32 --target dracodec_unity -j
 
     # Emscripten
     - name: setup Emscripten
@@ -156,7 +156,7 @@ jobs:
     - name: configure WebAssembly
       run: emcmake cmake -Bbuild_web -DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1 -DENABLE_JS_GLUE=OFF -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build WebAssembly
-      run: cmake --build build_web --target dracodec_unity
+      run: cmake --build build_web --target dracodec_unity -j
 
     # Linux, WebGL and Android artifact 
     - name: package Web Android Linux
