@@ -154,7 +154,7 @@ jobs:
         version: 1.38.48-fastcomp
         actions-cache-folder: 'emsdk-cache'
     - name: configure WebAssembly
-      run: emcmake cmake -Bbuild_web -DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1 -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      run: emcmake cmake -Bbuild_web -DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1 -DENABLE_JS_GLUE=OFF -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build WebAssembly
       run: cmake --build build_web --target dracodec_unity
 
