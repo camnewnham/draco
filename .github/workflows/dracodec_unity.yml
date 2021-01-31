@@ -24,11 +24,13 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '12.2'
+        xcode-version: latest-stable
+
+    - uses: seanmiddleditch/gha-setup-ninja@master
 
     - name: configure_mac
       # ARCHS_STANDARD explicitely enables Apple silicon on Xcode 12.2
-      run: cmake . -G Xcode -B build_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_OSX_ARCHITECTURES="\$(ARCHS_STANDARD)" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
+      run: cmake . -G Ninja -B build_mac -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DBUILD_UNITY_PLUGIN=ON -DBUILD_FOR_GLTF=ON
     - name: build_mac
       run: cmake --build build_mac --config MinSizeRel --target dracodec_unity
 
@@ -41,7 +43,7 @@ jobs:
       run: |
         mkdir draco_apple
         mkdir draco_apple/x86_64
-        mv build_mac/MinSizeRel/dracodec_unity.bundle draco_apple/x86_64
+        mv build_mac/dracodec_unity.bundle draco_apple/x86_64
         mkdir draco_apple/iOS
         mv build_ios/MinSizeRel-iphoneos/libdracodec_unity.a draco_apple/iOS
     - name: upload artifact
