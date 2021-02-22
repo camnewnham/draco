@@ -65,6 +65,7 @@ endif()
 if(BUILD_FOR_GLTF)
   # Override settings when building for GLTF.
   draco_enable_feature(FEATURE "DRACO_MESH_COMPRESSION_SUPPORTED")
+  draco_enable_feature(FEATURE "DRACO_POINT_CLOUD_COMPRESSION_SUPPORTED")
   draco_enable_feature(FEATURE "DRACO_NORMAL_ENCODING_SUPPORTED")
   draco_enable_feature(FEATURE "DRACO_STANDARD_EDGEBREAKER_SUPPORTED")
 else()
