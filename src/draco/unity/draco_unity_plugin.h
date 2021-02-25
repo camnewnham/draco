@@ -72,13 +72,7 @@ void EXPORT_API ReleaseUnityMesh(DracoToUnityMesh **mesh_ptr);
 int EXPORT_API DecodeMeshForUnity(char *data, unsigned int length,
                                   DracoToUnityMesh **tmp_mesh,
                                   int32_t weightsId = -1,
-                                  int32_t jointsId = -1
-                                  );
-int DecodeMesh(draco::DecoderBuffer *buffer, DracoToUnityMesh **tmp_mesh,
-               int32_t weightsId, int32_t jointsId);
-
-int DecodePointCloud(draco::DecoderBuffer *buffer, DracoToUnityMesh **tmp_mesh,
-                     int32_t weightsId, int32_t jointsId);
+                                  int32_t jointsId = -1);
 
 }  // extern "C"
 
